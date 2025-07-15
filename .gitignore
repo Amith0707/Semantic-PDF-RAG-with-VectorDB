@@ -1,0 +1,24 @@
+# Conda / virtual env folders
+env/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environment files
+*.env
+.env*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Jupyter/IPython
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
