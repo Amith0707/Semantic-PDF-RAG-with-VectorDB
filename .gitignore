@@ -22,3 +22,6 @@ Thumbs.db
 # VSCode
 .vscode/
 
+Topic.txt
+artifacts/
+logs/
