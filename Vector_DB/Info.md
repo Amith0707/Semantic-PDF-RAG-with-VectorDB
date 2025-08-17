@@ -1,1 +1,0 @@
-OFC made this folder to store vector loose schemas and to store the vector files
