@@ -133,3 +133,5 @@ langchain_pinecone==0.2.8
 fpdf==1.7.2
 pdfplumber==0.11.7
 pytesseract==0.3.13
+pymongo==4.14.0
+langchain-mongodb==0.6.2
