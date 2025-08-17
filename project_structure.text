@@ -1,0 +1,56 @@
+- .env
+- .gitignore
+- artifacts
+  - chunked_data
+    - images_data_chunk.pkl
+    - table_data_chunk.pkl
+    - text_data_chunk.pkl
+  - loaded_data
+    - image_docs.pkl
+    - table_docs.pkl
+    - text_docs.pkl
+- Chunks
+  - chunker.ipynb
+  - chunker.py
+  - __init__.py
+  - __pycache__
+    - chunker.cpython-312.pyc
+    - __init__.cpython-312.pyc
+- Dataset
+  - 100 SQL COMMANDS .pdf
+  - Journey to the center of the Earth.txt
+  - journey_to_center.pdf
+  - P_Data_Extract_From_World_Development_Indicators - Google Sheets.pdf
+- Embeddings
+  - embedding.py
+  - __init__.py
+- loader
+  - loader.ipynb
+  - loader.py
+  - __init__.py
+  - __pycache__
+    - loader.cpython-312.pyc
+    - __init__.cpython-312.pyc
+- logs
+  - project.log
+- notebook
+- Outputs
+  - docx_outputs
+  - model_response
+  - retrieval_logs
+- project_structure.text
+- README.md
+- requirements.txt
+- Retrievers
+  - Info.md
+  - __init__.py
+- Topic.txt
+- utils
+  - logger.py
+  - __init__.py
+  - __pycache__
+    - logger.cpython-312.pyc
+    - __init__.cpython-312.pyc
+- Vector_DB
+  - Info.md
+  - __init__.py
