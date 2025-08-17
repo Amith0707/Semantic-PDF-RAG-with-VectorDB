@@ -44,8 +44,8 @@ def chunk_files(text_data,table_data,images_data):
             chunk_size=800,chunk_overlap=100,separators=["\n\n","\n"," ",""]
         )
         table_splitter=CharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=0,
+            chunk_size=500,
+            chunk_overlap=50,
             separator="\n"
         )
         print("Sucessfully Invoked splitter objects")

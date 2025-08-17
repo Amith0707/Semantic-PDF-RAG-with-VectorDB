@@ -104,6 +104,7 @@ if __name__=="__main__":
     logger=setup_logger(__name__)
 
     text_doc=text_loader()
+    # print(text_doc.page_content)
     table_doc=table_loader()
     images_doc=image_loader()
 
