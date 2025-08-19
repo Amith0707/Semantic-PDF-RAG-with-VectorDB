@@ -52,7 +52,7 @@ def load_files():
         print("Error in load_files of indexer.py")
         logger.error("Error in load_files of indexer.py")
 
-def build_faiss_indices(documents,embedding_model):
+def build_faiss_indices(documents, embedding_model):
     try:
         """
         Build Flat, HNSW, and IVF FAISS indices from Document objects.
@@ -60,46 +60,48 @@ def build_faiss_indices(documents,embedding_model):
         """
         logger.info("Entering the build_faiss_indices() function")
         print("Entering the build_faiss_indices() function")
+
         # Get embedding dimension
         dim = len(embedding_model.embed_query("hello world"))
+
         ####################################################################
         print("1. Building Flat index....")
-        flat_faiss_index = faiss.IndexFlatIP(dim)
+        flat_faiss_index = faiss.IndexFlatL2(dim)   # keep L2 for consistency
 
-        # Build vectorstore
         flat_index = FAISS(
             embedding_function=embedding_model,
             index=flat_faiss_index,
             docstore=InMemoryDocstore(),
             index_to_docstore_id={}
         )
-        # Add documents
         flat_index.add_documents(documents)
-        ######################################################################
-        print("2. Building hnsw index....")
-        hnsw_faiss_index = faiss.IndexHNSWFlat(dim,32)
 
-        # Build vectorstore
+        ######################################################################
+        print("2. Building HNSW index....")
+        hnsw_faiss_index = faiss.IndexHNSWFlat(dim, 32)
+        hnsw_faiss_index.metric_type = faiss.METRIC_L2   # ensure L2 metric
+
         hnsw_index = FAISS(
             embedding_function=embedding_model,
             index=hnsw_faiss_index,
             docstore=InMemoryDocstore(),
             index_to_docstore_id={}
         )
-        # Add documents
         hnsw_index.add_documents(documents)
+
         ######################################################################
         print("3. Building IVF index....")
-        nlist = 100  # number of clusters (tuneable)
+        nlist = 100  # number of clusters (tunable)
         quantizer = faiss.IndexFlatL2(dim)
         ivf_faiss_index = faiss.IndexIVFFlat(quantizer, dim, nlist, faiss.METRIC_L2)
 
-        # Train the IVF index
+        # Train the IVF index on embeddings
         doc_embeddings = embedding_model.embed_documents([d.page_content for d in documents])
         doc_embeddings = np.array(doc_embeddings).astype("float32")
-        ivf_faiss_index.train(doc_embeddings)
 
-        # Build FAISS vectorstore
+        if not ivf_faiss_index.is_trained:
+            ivf_faiss_index.train(doc_embeddings)
+
         ivf_index = FAISS(
             embedding_function=embedding_model,
             index=ivf_faiss_index,
@@ -110,11 +112,14 @@ def build_faiss_indices(documents,embedding_model):
 
         print("Creation of all 3 indices successful")
         logger.info("Creation of all 3 indices successful")
-        return flat_index,hnsw_index,ivf_index
+
+        return flat_index, hnsw_index, ivf_index
 
     except Exception as e:
-        print("Error in build_faiss_indices() funcition")
-        logger.error("Error in build_faiss_indices() funcition {e}",exc_info=True)
+        logger.error(f"Error in build_faiss_indices: {e}")
+        print(f"Error in build_faiss_indices: {e}")
+        return None, None, None
+
 
 
 def save_indices(flat_index, hnsw_index, ivf_index):
@@ -143,12 +148,4 @@ def save_indices(flat_index, hnsw_index, ivf_index):
         print("Error saving FAISS indices")
         logger.error(f"Error saving FAISS indices: {e}", exc_info=True)
 
-
-if __name__ == "__main__":
-    print("Entered the main function in indexer.py")
-    logger.info("Entered the main function in indexer.py")
-
-    docs, embeddings_model = load_files()
-    flat_idx, hnsw_idx, ivf_idx = build_faiss_indices(docs, embeddings_model)
-    save_indices(flat_idx, hnsw_idx, ivf_idx)
 

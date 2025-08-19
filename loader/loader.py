@@ -1,3 +1,7 @@
+#importing logging utility
+from utils.logger import setup_logger
+#creating log object
+logger=setup_logger(__name__)
 # loading the text based pdfs---------------------------------------
 def text_loader():
     try:
@@ -40,14 +44,14 @@ def table_loader():
         load_dotenv()
         TABLE_PDF_PATH=os.getenv("TABLE_PDF_PATH")
         table_docs=PDFPlumberLoader(TABLE_PDF_PATH)
-        table_loader=table_docs.load()
+        table_loader_data=table_docs.load()
         print("Sucessfully loaded table based pdf")
         print("-"*60)
-        logger.info(f"Loaded {len(table_loader)} pages from table-based PDF")
-        print(f"Loaded {len(table_loader)} pages from table-based PDF")
+        logger.info(f"Loaded {len(table_loader_data)} pages from table-based PDF")
+        print(f"Loaded {len(table_loader_data)} pages from table-based PDF")
         print("-"*60)
 
-        return table_loader
+        return table_loader_data
 
     except Exception as e:
         logger.error(f"Failed to load the Table Based PDF :{e}",exc_info=True)
@@ -92,44 +96,6 @@ def image_loader():
         return images_docs
     except Exception as e:
         logger.error(f"Error occured in image_loader function :{e}")
-
-
-if __name__=="__main__":
-
-    import os
-    import pickle
-    #importing logging utility
-    from utils.logger import setup_logger
-    #creating log object
-    logger=setup_logger(__name__)
-
-    text_doc=text_loader()
-    # print(text_doc.page_content)
-    table_doc=table_loader()
-    images_doc=image_loader()
-
-    #offloading the loaded documents in other location
-    def save_documents(docs,filename):
-        with open(filename,'wb') as f:
-            pickle.dump(docs,f)
-            print(f"Saved :{filename}")
-
-    os.makedirs("artifacts/loaded_data", exist_ok=True)
-    save_documents(text_doc, "artifacts/loaded_data/text_docs.pkl")
-    save_documents(table_doc, "artifacts/loaded_data/table_docs.pkl")
-    save_documents(images_doc, "artifacts/loaded_data/image_docs.pkl")
-
-    logger.info("DATA EXPORTED SUCCESSFULLY FROM logger.py")
-
-        # return text_doc,table_doc,images_doc #export point IMPORTANT
-        #ALL IS WORKING WELL
-
-        # print(f"First 500 char of text_doc: \n {text_doc[0].page_content[:500]}")
-        # print("-"*100)
-        # print(f"First 500 char of table_doc: \n {table_doc[0].page_content[:500]}")
-        # print("-"*100)
-        # print(f"First 500 char of image_doc: \n {images_doc[0].page_content[:500]}")
-        # print("-"*100)
 
     
 
