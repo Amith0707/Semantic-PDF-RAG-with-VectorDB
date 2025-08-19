@@ -10,7 +10,6 @@ def read_files():
     #reading the text based pickle file:
     try:
         logger.info("Entered the read_files in chunker.py")
-        import pickle
         text_file_path="artifacts/loaded_data/text_docs.pkl"
         table_file_path="artifacts/loaded_data/table_docs.pkl"
         images_file_path="artifacts/loaded_data/image_docs.pkl"
@@ -28,6 +27,7 @@ def read_files():
     
     except Exception as e:
         logger.error(f"Error caused in the read_files function of chunker.py")
+        return None,None,None #-->to avpoid TypeError in main.py when unpacking if nothing comes
 
 def chunk_files(text_data,table_data,images_data):
     try:
@@ -62,24 +62,4 @@ def chunk_files(text_data,table_data,images_data):
     
     except Exception as e:
         logger.error(f"Error caused in chunk_files function of chunker.py")
-
-if __name__=="__main__":
-    
-    #Calling the function to load the artifacts pickle data
-    text_data,table_data,images_data=read_files()
-    print("Main function successfully loaded the pickle data")
-    text_chunks,table_chunks,images_chunks=chunk_files(text_data,table_data,images_data)
-    print("Main function successfully fetched the chunked data")
-
-    #loading the chunked data back into pickle files
-    def save_documents(docs,filename):
-        with open(filename,'wb') as f:
-            pickle.dump(docs,f)
-            print(f"Saved :{filename}")
-    os.makedirs("artifacts/chunked_data", exist_ok=True)
-    save_documents(text_chunks,"artifacts/chunked_data/text_data_chunk.pkl")
-    save_documents(table_chunks,"artifacts/chunked_data/table_data_chunk.pkl")
-    save_documents(images_chunks,"artifacts/chunked_data/images_data_chunk.pkl")
-
-    print("Main function exported the pickled chunk files")
-    logger.info("Main function exported the pickled chunk files")
+        
